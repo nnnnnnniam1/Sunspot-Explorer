@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여가 활동 추천</title>
+</head>
+<body>
+    <h1>{{ location }} 지역의 {{ weather }}에 따른 여가 활동 추천</h1>
+    <ul>
+        {% for activity in recommendations %}
+            <li>{{ activity.name }} - 카테고리: {{ activity.category }} - 날씨: {{ activity.weather|safe }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="/">돌아가기</a></p>
+</body>
+</html>

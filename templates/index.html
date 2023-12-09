@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
+    <title>Weather and Places</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        .map_wrap {position:relative;width:100%;height:350px;}
+        .title {font-weight:bold;display:block;}
+        .hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
+        #centerAddr {display:block;margin-top:2px;font-weight: normal;}
+        .bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Information</h1>
+        <div class="areaInfo">
+            <h2>{{area_data.area1.name}} {{area_data.area2.name}} {{area_data.area3.name}}</h2>
+        </div>
+        <div class="weatherInfo">
+            <p> 현재 날씨는 {{ weather_data.weather[0].description }}</p>
+            <img class="icon" src="http://openweathermap.org/img/wn/{{weather_data.weather[0].icon}}.png" />
+            <p>현재 온도 : {{ weather_data.main.temp }}</p>
+            <p>체감 온도 : {{ weather_data.main.feels_like }}</p>
+        <!-- Add more weather information as needed -->
+        </div>
+        <div>
+            <h1>Places to Visit</h1>
+            <button id="recommendButton" onclick="recommendPlaces()">Recommend Places to Visit</button>
+            <ul id="recommendedPlacesList"></ul>
+        </div>
+    </div>
+</body>
+<script>
+    function recommendPlaces() {
+            const currentWeather = "{{ weather_data.weather[0].main }}";
+
+        // AJAX를 사용하여 서버에 장소 추천 요청을 보냅니다.
+        fetch(`/recommend-places?weather=${currentWeather}`)
+            .then(response => response.json())
+            .then(data => {
+                // 추천된 장소 목록을 가져와 HTML에 표시합니다.
+                const recommendedPlacesList = document.getElementById("recommendedPlacesList");
+                recommendedPlacesList.innerHTML = "";
+                data.forEach(place => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = place;
+                    recommendedPlacesList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching recommended places:', error);
+            });
+    }
+</script>
+</html>
